@@ -23,9 +23,11 @@ public class ScreenmatchApplication implements CommandLineRunner {
 		var link = new ApiConsumption();
 		DataConverter converter = new DataConverter();
 
-		var serie = link.getData(links.serieLink("The Wheel of Time"));
+		var serie = links.serieLink("The Wheel of Time");
 		System.out.println(serie);
-		var season = link.getData(links.seasonLink("The Wheel of Time",2));
-		var episod = link.getData(links.epLink("The Wheel of Time",1,3));
+		var season = links.seasonLink("The Wheel of Time",0);
+		System.out.println(season);
+		var episod = links.epLink("The Wheel of Time",1,3);
+		System.out.println(episod);
 	}
 }
