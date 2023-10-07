@@ -7,10 +7,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ApiConsumption {
-    public String obterDados(String endereco) {
+    public String getData(String address) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(endereco))
+                .uri(URI.create(address))
                 .build();
         HttpResponse<String> response = null;
         try {

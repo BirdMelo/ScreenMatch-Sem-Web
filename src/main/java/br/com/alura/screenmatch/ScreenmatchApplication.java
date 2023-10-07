@@ -1,6 +1,9 @@
 package br.com.alura.screenmatch;
 
+import br.com.alura.screenmatch.model.EpData;
 import br.com.alura.screenmatch.model.SerieData;
+import br.com.alura.screenmatch.model.links.OmdbLinks;
+import br.com.alura.screenmatch.model.SeasonData;
 import br.com.alura.screenmatch.service.ApiConsumption;
 import br.com.alura.screenmatch.service.DataConverter;
 import org.springframework.boot.CommandLineRunner;
@@ -16,11 +19,13 @@ public class ScreenmatchApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		OmdbLinks links = new OmdbLinks();
 		var link = new ApiConsumption();
-		var json = link.obterDados("https://www.omdbapi.com/?t=the+wheel+of+time&apikey=ff4bb4a8");
-		System.out.println(json);
 		DataConverter converter = new DataConverter();
-		SerieData data = converter.getDatum(json,SerieData.class);
-		System.out.println(data);
+
+		var serie = link.getData(links.serieLink("The Wheel of Time"));
+		System.out.println(serie);
+		var season = link.getData(links.seasonLink("The Wheel of Time",2));
+		var episod = link.getData(links.epLink("The Wheel of Time",1,3));
 	}
 }
