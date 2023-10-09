@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private OmdbLinks links = new OmdbLinks();
-    private List<SeasonData> seasons = new ArrayList<>();
-    private DataConverter converter = new DataConverter();
-    private Scanner write = new Scanner(System.in);
+    private final OmdbLinks LINKS = new OmdbLinks();
+    private final List<SeasonData> SEASONS = new ArrayList<>();
+    private final DataConverter CONVERTER = new DataConverter();
+    private final Scanner WRITE = new Scanner(System.in);
     public void showMenu(){
         System.out.print("Nome da série: ");
-        String name = write.nextLine();
+        String name = WRITE.nextLine();
 
         System.out.print("""
 				1 - ver dados da serie
@@ -25,10 +25,10 @@ public class Main {
 				3 - ver um episodio específico
 				
 				Escolha:\s""");
-        int choice = write.nextInt();
+        int choice = WRITE.nextInt();
 
-        var serie = links.serieLink(name);
-        SerieData serieData = converter.getDatum(serie, SerieData.class);
+        var serie = LINKS.serieLink(name);
+        SerieData serieData = CONVERTER.getDatum(serie, SerieData.class);
         switch (choice) {
             case 1:
 
@@ -38,21 +38,21 @@ public class Main {
             case 3:
 
                 System.out.println("Qual temporada?");
-                int w_season = write.nextInt();
+                int w_season = WRITE.nextInt();
                 System.out.println("Qual episodio?");
-                int w_ep = write.nextInt();
+                int w_ep = WRITE.nextInt();
 
-                var episod = links.epLink(name, 1, 3);
-                EpData epData = converter.getDatum(episod, EpData.class);
+                var episod = LINKS.epLink(name, w_season, w_ep);
+                EpData epData = CONVERTER.getDatum(episod, EpData.class);
                 System.out.println(epData);
 
                 break;
             case 2:
 
                 for (int i = 1; i <= serieData.seasons(); i++) {
-                    var season = links.seasonLink(name, i);
-                    SeasonData seasonData = converter.getDatum(season, SeasonData.class);
-                    seasons.add(seasonData);
+                    var season = LINKS.seasonLink(name, i);
+                    SeasonData seasonData = CONVERTER.getDatum(season, SeasonData.class);
+                    SEASONS.add(seasonData);
                 }
 
 //                sem forEach
@@ -66,7 +66,7 @@ public class Main {
 //                                data.number(), data.title());
 //                    }
 //                }
-                 seasons.forEach(s -> {
+                 SEASONS.forEach(s -> {
                      System.out.printf("Temporada: %d%n",s.season());
                      s.episodes().forEach(e -> {
                          System.out.printf("Ep: %d | Nome: %s%n",e.number(),e.title());
