@@ -55,17 +55,23 @@ public class Main {
                     seasons.add(seasonData);
                 }
 
-                for (int i = 0; i< serieData.seasons(); i++){
-                    System.out.printf("Temporada: %d\n",
-                            seasons.get(i).season());
-                    List<EpData> epOfSeason = seasons.get(i).episodes();
-                    for (EpData data : epOfSeason) {
-                        System.out.printf("""
-                                        Ep: %d | Nome: %s%n""",
-                                data.number(), data.title());
-                    }
-                }
-//                 seasons.forEach(s -> s.episodes().forEach(e -> System.out.println(e.title())));
+//                sem forEach
+//                for (int i = 0; i< serieData.seasons(); i++){
+//                    System.out.printf("Temporada: %d%n",
+//                            seasons.get(i).season());
+//                    List<EpData> epOfSeason = seasons.get(i).episodes();
+//                    for (EpData data : epOfSeason) {
+//                        System.out.printf("""
+//                                        Ep: %d | Nome: %s%n""",
+//                                data.number(), data.title());
+//                    }
+//                }
+                 seasons.forEach(s -> {
+                     System.out.printf("Temporada: %d%n",s.season());
+                     s.episodes().forEach(e -> {
+                         System.out.printf("Ep: %d | Nome: %s%n",e.number(),e.title());
+                     });
+                 });
 
                 break;
             default:
