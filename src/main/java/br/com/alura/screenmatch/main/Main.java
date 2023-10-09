@@ -68,9 +68,7 @@ public class Main {
 //                }
                  SEASONS.forEach(s -> {
                      System.out.printf("Temporada: %d%n",s.season());
-                     s.episodes().forEach(e -> {
-                         System.out.printf("Ep: %d | Nome: %s%n",e.number(),e.title());
-                     });
+                     s.episodes().forEach(e -> System.out.printf("Ep: %d | Nome: %s%n",e.number(),e.title()));
                  });
 
                 break;
