@@ -1,6 +1,5 @@
-package br.com.alura.screenmatch.model;
+package br.com.alura.screenmatch.model.records;
 
-import br.com.alura.screenmatch.model.EpData;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -9,6 +8,6 @@ import java.util.List;
 public record SeasonData(
         @JsonAlias("Title") String title,
         @JsonAlias("Season") int season,
-        @JsonAlias("Episodes") List<EpData> episodes
+        @JsonAlias("Episodes") List<R_Episode> episodes
 ) {
 }
