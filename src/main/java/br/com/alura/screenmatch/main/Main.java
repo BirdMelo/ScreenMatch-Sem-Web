@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class Main {
     private final OmdbLinks LINKS = new OmdbLinks();
-    private List<SeasonData> SEASONS = new ArrayList<>();
+    private final List<SeasonData> SEASONS = new ArrayList<>();
     private final DataConverter CONVERTER = new DataConverter();
     private final Scanner WRITE = new Scanner(System.in);
     public void showMenu(){

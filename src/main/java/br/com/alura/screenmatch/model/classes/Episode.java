@@ -7,9 +7,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Episode {
-    private String title;
-    private int season;
-    private int number;
+    private final String title;
+    private final int season;
+    private final int number;
     private double rating;
     private LocalDate release;
 
@@ -54,6 +54,6 @@ public class Episode {
     public String toString() {
         DateTimeFormatter formatBR = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return String.format("Temporada: %d | Episódio: %d | Nome: %s | Lançamento: %s | Avaliação: %.2f",
-                season,number,title,release.format(formatBR),rating);
+                season,number, title,release.format(formatBR),rating);
     }
 }
