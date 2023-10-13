@@ -38,6 +38,8 @@ public class Main {
                 
                 6   -   Procurar episódios aparti de um ano
                 
+                7   -   Média de avaliações por temporada.
+                
                 Escolha:\s""");
 
         int choise = WRITE.nextInt();
@@ -46,7 +48,7 @@ public class Main {
         if (choise==1) {
             System.out.printf("Nome: %s | Temporadas: %d | Avaliação: %s%n",
                     serieData.title(), serieData.seasons(), serieData.rating());
-        } else if (choise<=6) {
+        } else if (choise<=7) {
 
             for (int i = 1; i <= serieData.seasons(); i++) {
                 var season = LINKS.seasonLink(name, i);
@@ -132,6 +134,23 @@ public class Main {
                         .filter(e -> e.getRelease() != null && e.getRelease().isAfter(date))
                         .forEach(System.out::println);
 
+            } else if (choise == 7) {
+
+                Map<Integer,Double> avgSeason = episodes.stream()
+                        .filter( e -> e.getRating()>0)
+                        .collect(Collectors.groupingBy(Episode::getSeason,
+                                Collectors.averagingDouble(Episode::getRating)));
+                System.out.println(avgSeason);
+
+                DoubleSummaryStatistics est = episodes.stream()
+                        .filter(e -> e.getRating()>0)
+                        .collect(Collectors.summarizingDouble(Episode::getRating));
+                System.out.printf("""
+                        Média: %.1f
+                        Melhor episódio: %.1f
+                        Pior episódio: %.1f
+                        Quantidade de episódios avaliados: %d""",
+                        est.getAverage(),est.getMax(),est.getMin(),est.getCount());
             }
         }
         System.out.println("\nFim do processo :D");
