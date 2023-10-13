@@ -25,7 +25,7 @@ public class Main {
 
         R_Serie serieData = CONVERTER.getDatum(serie, R_Serie.class);
 
-        System.out.printf("""
+        System.out.print("""
                 1   -   Ver Dados série
                 
                 2   -   Ver temporadas e episódios
