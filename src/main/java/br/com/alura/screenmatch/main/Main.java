@@ -25,80 +25,115 @@ public class Main {
 
         R_Serie serieData = CONVERTER.getDatum(serie, R_Serie.class);
 
-        for (int i = 1; i <= serieData.seasons(); i++) {
-            var season = LINKS.seasonLink(name, i);
-            SeasonData seasonData = CONVERTER.getDatum(season, SeasonData.class);
-            SEASONS.add(seasonData);
-        }
+        System.out.printf("""
+                1   -   Ver Dados série
+                
+                2   -   Ver temporadas e episódios
+                
+                3   -   Procurar episódio por temporada e Número
+                
+                4   -   Procurar episódio por nome
+                
+                5   -   Top 10 episódios da série
+                
+                6   -   Procurar episódios aparti de um ano
+                
+                Escolha:\s""");
 
-        List<R_Episode> epList = SEASONS.stream()
-                .flatMap(s->s.episodes().stream())
-                .collect(Collectors.toList());
-
-        List<Episode> episodes = SEASONS.stream()
-                .flatMap(s -> s.episodes().stream()
-                        .map(d-> new Episode(s.season(), d))
-                ).collect(Collectors.toList());
-
-//        um ep especifico
-        System.out.println("Qual temporada?");
-        int w_season = WRITE.nextInt();
-        System.out.println("Qual episodio?");
-        int w_ep = WRITE.nextInt();
-
-        var episod = LINKS.epLink(name, w_season, w_ep);
-        R_Episode epData = CONVERTER.getDatum(episod, R_Episode.class);
-        System.out.println(epData);
-
-        System.out.println("Toda a serie");
-        episodes.forEach(System.out::println);
-
-        System.out.print("Epsodio: ");
-        var partTitle = WRITE.nextLine();
+        int choise = WRITE.nextInt();
         WRITE.nextLine();
-        Optional<Episode> epSearched = episodes.stream()
-                .filter(e -> e.getTitle().toLowerCase().contains(partTitle.toLowerCase()))
-                .findFirst();
-        if (epSearched.isPresent()) {
-            System.out.print("Episódio encontrado: ");
-            System.out.println(epSearched.get());
-        } else {
-            System.out.println("Episódio não encontrado.");
+
+        if (choise==1) {
+            System.out.printf("Nome: %s | Temporadas: %d | Avaliação: %s%n",
+                    serieData.title(), serieData.seasons(), serieData.rating());
+        } else if (choise<=6) {
+
+            for (int i = 1; i <= serieData.seasons(); i++) {
+                var season = LINKS.seasonLink(name, i);
+                SeasonData seasonData = CONVERTER.getDatum(season, SeasonData.class);
+                SEASONS.add(seasonData);
+            }
+
+            List<R_Episode> epList = SEASONS.stream()
+                    .flatMap(s->s.episodes().stream())
+                    .collect(Collectors.toList());
+
+            List<Episode> episodes = SEASONS.stream()
+                    .flatMap(s -> s.episodes().stream()
+                            .map(d-> new Episode(s.season(), d))
+                    ).collect(Collectors.toList());
+
+            if (choise==2){
+
+                //        Temporadas e Episódios
+                System.out.println("Toda a serie");
+                episodes.forEach(System.out::println);
+            } else if (choise == 3) {
+                //Por temporada e número de episódio:
+                System.out.println("Qual temporada?");
+                int w_season = WRITE.nextInt();
+                System.out.println("Qual episodio?");
+                int w_ep = WRITE.nextInt();
+                WRITE.nextLine();
+
+                var episod = LINKS.epLink(name, w_season, w_ep);
+                R_Episode epData = CONVERTER.getDatum(episod, R_Episode.class);
+                System.out.println(epData);
+            } else if (choise == 4) {
+
+                //        Ep Por nome
+                System.out.println("Episódio: ");
+                var partTitle = WRITE.nextLine().trim();
+                System.out.println(partTitle);
+                Optional<Episode> epSearched = episodes.stream()
+                        .filter(e -> e.getTitle().toLowerCase().contains(partTitle.toLowerCase()))
+                        .findFirst();
+
+                if (epSearched.isPresent()) {
+                    System.out.print("Episódio encontrado: ");
+                    System.out.println(epSearched.get());
+                } else {
+                    System.out.println("Episódio não encontrado.");
+                }
+            } else if (choise == 5) {
+
+                //        Top 10:
+                System.out.println("Top 10:");
+                epList.stream()
+                        .filter(e-> !e.rating().equalsIgnoreCase("N/A"))
+//                        .peek(e-> System.out.println("Filtro 'N/A': "+ e))
+                        .sorted(Comparator.comparing(R_Episode::rating))
+//                        .peek(e-> System.out.println("Filtro ordenar: "+ e))
+                        .limit(10)
+//                        .peek(e-> System.out.println("Filtro limitar: "+ e))
+                        .map(e->e.title().toUpperCase())
+//                        .peek(e-> System.out.println("Filtro mapeamento: "+ e))
+                        .forEach(System.out::println);
+
+//                episodes = SEASONS.stream()
+//                        .flatMap(s -> s.episodes().stream()
+//                                .map(d-> new Episode(s.season(), d))
+//                        )
+//                        .sorted(Comparator.comparing(Episode::getRating).reversed())
+//                        .limit(10)
+//                        .collect(Collectors.toList());
+//                episodes.forEach(System.out::println);
+            } else if (choise == 6) {
+
+                //        Pesquisar por ano:
+
+                System.out.print("Digite o ano: ");
+                var year = WRITE.nextInt();
+                WRITE.nextLine();
+
+                LocalDate date = LocalDate.of(year,1,1);
+
+                episodes.stream()
+                        .filter(e -> e.getRelease() != null && e.getRelease().isAfter(date))
+                        .forEach(System.out::println);
+
+            }
         }
-
-//        System.out.println("Top 10:");
-//        epList.stream()
-//                .filter(e-> !e.rating().equalsIgnoreCase("N/A"))
-////                .peek(e-> System.out.println("Filtro 'N/A': "+ e))
-//                .sorted(Comparator.comparing(R_Episode::rating))
-////                .peek(e-> System.out.println("Filtro ordenar: "+ e))
-//                .limit(10)
-////                .peek(e-> System.out.println("Filtro limitar: "+ e))
-//                .map(e->e.title().toUpperCase())
-////                .peek(e-> System.out.println("Filtro mapeamento: "+ e))
-//                .forEach(System.out::println);
-
-
-//        episodes = SEASONS.stream()
-//                .flatMap(s -> s.episodes().stream()
-//                        .map(d-> new Episode(s.season(), d))
-//                )
-//                .sorted(Comparator.comparing(Episode::getRating).reversed())
-//                .limit(10)
-//                .collect(Collectors.toList());
-//        episodes.forEach(System.out::println);
-
-
-//        System.out.print("Digite o ano: ");
-//        var year = WRITE.nextInt();
-//        WRITE.nextLine();
-//
-//        LocalDate date = LocalDate.of(year,1,1);
-//
-//        episodes.stream()
-//                .filter(e -> e.getRelease() != null && e.getRelease().isAfter(date))
-//                .forEach(System.out::println);
-
         System.out.println("\nFim do processo :D");
     }
 }
